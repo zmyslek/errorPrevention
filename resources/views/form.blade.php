@@ -19,7 +19,7 @@
     <form action="{{ route('register.submit') }}" method="POST" id="registerForm" class="space-y-4">
         @csrf
 
-        <!-- Name field -->
+        <!-- Name field with length validation -->
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
             <input type="text" id="name" name="name" value="{{ old('name') }}"
@@ -27,9 +27,12 @@
                    required
                    minlength="2"
                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror">
-            @error('name')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
+            <div id="nameFeedback">
+                @error('name')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                <p id="nameLengthError" class="mt-1 text-sm text-red-600 hidden">Name must be at least 2 characters</p>
+            </div>
         </div>
 
         <!-- Email field -->
@@ -44,7 +47,7 @@
             @enderror
         </div>
 
-        <!-- Password field -->
+        <!-- Password field with length validation -->
         <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input type="password" id="password" name="password"
@@ -52,9 +55,12 @@
                    required
                    minlength="6"
                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror">
-            @error('password')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
+            <div id="passwordFeedback">
+                @error('password')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                <p id="passwordLengthError" class="mt-1 text-sm text-red-600 hidden">Password must be at least 6 characters</p>
+            </div>
         </div>
 
         <!-- Confirm Password field -->
@@ -64,7 +70,7 @@
                    required
                    minlength="6"
                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password_confirmation') border-red-500 @enderror">
-            <div id="passwordFeedback">
+            <div id="confirmPasswordFeedback">
                 @error('password_confirmation')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -83,10 +89,39 @@
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('registerForm');
         const submitButton = document.getElementById('submitButton');
+        const nameInput = document.getElementById('name');
         const passwordInput = document.getElementById('password');
         const confirmPasswordInput = document.getElementById('password_confirmation');
+        const nameLengthError = document.getElementById('nameLengthError');
+        const passwordLengthError = document.getElementById('passwordLengthError');
         const passwordMatchError = document.getElementById('passwordMatchError');
         const inputs = Array.from(form.querySelectorAll('input[required]'));
+
+        function checkNameLength() {
+            const name = nameInput.value;
+
+            // Show error if name is too short and not empty
+            if (name && name.length < 2) {
+                nameLengthError.classList.remove('hidden');
+                return false;
+            } else {
+                nameLengthError.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function checkPasswordLength() {
+            const password = passwordInput.value;
+
+            // Show error if password is too short and not empty
+            if (password && password.length < 6) {
+                passwordLengthError.classList.remove('hidden');
+                return false;
+            } else {
+                passwordLengthError.classList.add('hidden');
+                return true;
+            }
+        }
 
         function checkPasswordMatch() {
             const password = passwordInput.value;
@@ -112,13 +147,13 @@
                 }
             });
 
-            // Check password requirements
-            const passwordsValid = checkPasswordMatch() &&
-                passwordInput.value.length >= 6 &&
-                passwordInput.value === confirmPasswordInput.value;
+            // Check field requirements
+            const nameValid = checkNameLength();
+            const passwordValid = checkPasswordLength();
+            const passwordsMatch = checkPasswordMatch();
 
             // Update button state
-            if (allFilled && passwordsValid) {
+            if (allFilled && nameValid && passwordValid && passwordsMatch) {
                 submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
                 submitButton.classList.add('bg-green-500', 'hover:bg-green-600');
                 submitButton.disabled = false;
@@ -134,8 +169,18 @@
             input.addEventListener('input', validateForm);
         });
 
-        // Special validation for password fields
-        passwordInput.addEventListener('input', validateForm);
+        // Special validation for specific fields
+        nameInput.addEventListener('input', function() {
+            checkNameLength();
+            validateForm();
+        });
+
+        passwordInput.addEventListener('input', function() {
+            checkPasswordLength();
+            checkPasswordMatch();
+            validateForm();
+        });
+
         confirmPasswordInput.addEventListener('input', function() {
             checkPasswordMatch();
             validateForm();
