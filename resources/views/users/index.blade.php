@@ -24,5 +24,6 @@
         @endforelse
         </tbody>
     </table>
+    <section class="left"><a href="{{ route('dashboard') }}">Return</a></section><br/>
 </div>
 

@@ -15,6 +15,11 @@
                 {{ session('success') }}
             </div>
         @endif
+        @can('manage_users')
+            <li>
+                <a href="{{ route('users.index') }}">Users</a>
+            </li>
+        @endcan
         <a href="#" class="navbar-item " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             Logout
         </a>
