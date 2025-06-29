@@ -8,6 +8,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage_users', function(User $user) {
             return $user->is_admin == 1;
         });
+        //Snooping/session hijacking: Force HTTPS scheme for URLs
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }

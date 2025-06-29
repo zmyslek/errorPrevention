@@ -20,9 +20,16 @@ Route::post('/register',[RegisterController::class, 'store'])->name('register.su
 Route::get('/trigger-500', fn() => abort(500));
 //NOTE: routes to login, register, and password reset are defined in routes/auth.php and added in app.php !
 
-Route::resource('users', UserController::class)->middleware('can:manage_users');
+Route::middleware(['auth', 'throttle:5,1'])->group(function () {
+   Route::resource('users', UserController::class)->middleware('can:manage_users');
+});
+
 
 Route::fallback(function () {
+    $currentPath = request()->path();
+    if ($currentPath === 'dashboard') {
+        return response()->view('welcome'); // Redirect to home if the path is 'dashboard'
+    }
     return Auth::check()
         ? redirect('/dashboard')
         : redirect('/login'); // or wherever your guest landing page is

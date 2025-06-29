@@ -23,6 +23,9 @@ class RegisterController extends Controller
                 ],
         ]);
 
+        // Snooping/session hijacking: Regenerate the session to prevent session fixation attacks
+        $request->session()->regenerate();
+
         // Create the user
         $user = User::create([
             'name' => $validated['name'],
