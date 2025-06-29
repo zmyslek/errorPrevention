@@ -2,7 +2,7 @@
 
 ## 1. IDOR
 
-app\Use.php:26 
+app\Model\Use.php:26 
   - is_admin controls admin access to Users view
 
 app\Providers\AppServiceProvider.php:32 
