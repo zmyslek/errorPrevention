@@ -4,6 +4,7 @@
 
 app\Model\User.php:26 
   - is_admin controls admin access to Users view
+  
 
 app\Providers\AppServiceProvider.php:32 
   - defines Gate on manage_users based on is_admin for current user
