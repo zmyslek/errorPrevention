@@ -4,7 +4,7 @@
 
 app\Model\User.php:26 
   - is_admin controls admin access to Users view
-  
+
 
 app\Providers\AppServiceProvider.php:32 
   - defines Gate on manage_users based on is_admin for current user
@@ -42,3 +42,16 @@ config\session.php:
 Http\Conctrollers\RegisterController.php:
   - Regenerate the session to prevent session fixation attacks
 
+## 3. Testing
+Normal user
+ - log in with these credentials:
+    - email: zuzu@example.com
+    - password: G7RTdcJz3nz5bJZ@
+ - or register as a new user
+
+ - do it to test how unknown route handling works (go to https://security-assignment3-684cc9af10e0.herokuapp.com/userssssss)
+ - do it to test how the application handles trying to breach user information (go to https://security-assignment3-684cc9af10e0.herokuapp.com/users)
+Admin user
+ - log in with these credentials:
+    - email: admin@example.com
+    - password: password
