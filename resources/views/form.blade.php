@@ -6,7 +6,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-<div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+<section class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+    <section class="left"><a href="{{ route('dashboard') }}">Home</a></section><br/>
     <h1 class="text-2xl font-bold text-gray-800 mb-4">Register</h1>
     <p class="text-gray-600 mb-6 italic">All fields are required.</p>
 
@@ -38,7 +39,7 @@
         <!-- Email field -->
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}"
+            <input type="email" id="email" name="email" value="{{ old('email') }}" autocomplete="username"
                    placeholder="e.g. john@example.com"
                    required
                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror">
@@ -50,16 +51,16 @@
         <!-- Password field with length validation -->
         <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input type="password" id="password" name="password"
-                   placeholder="Minimum 6 characters"
+            <input type="password" id="password" name="password" autocomplete="new-password"
+                   placeholder="Minimum 12 characters, at least one uppercase, one digit, and one special character"
                    required
-                   minlength="6"
+                   minlength="12"
                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror">
             <div id="passwordFeedback">
                 @error('password')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                <p id="passwordLengthError" class="mt-1 text-sm text-red-600 hidden">Password must be at least 6 characters</p>
+                <p id="passwordLengthError" class="mt-1 text-sm text-red-600 hidden">Password must be at least 12 characters</p>
             </div>
         </div>
 
@@ -68,7 +69,7 @@
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
             <input type="password" id="password_confirmation" name="password_confirmation"
                    required
-                   minlength="6"
+                   minlength="12"
                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password_confirmation') border-red-500 @enderror">
             <div id="confirmPasswordFeedback">
                 @error('password_confirmation')
@@ -83,7 +84,7 @@
             Register
         </button>
     </form>
-</div>
+</section>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -114,7 +115,7 @@
             const password = passwordInput.value;
 
             // Show error if password is too short and not empty
-            if (password && password.length < 6) {
+            if (password && password.length < 12) {
                 passwordLengthError.classList.remove('hidden');
                 return false;
             } else {
@@ -190,5 +191,6 @@
         validateForm();
     });
 </script>
+
 </body>
 </html>
